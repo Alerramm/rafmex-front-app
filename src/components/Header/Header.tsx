@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import Logo from '../../assets/img/icons/logo.png';
 /* Cart */
 import Cart from '../../../src/pages/Cart/Cart';
+import { connect } from 'react-redux'
 
-const HeaderApp: React.FC = () => {
+const HeaderApp: React.FC = (props:any) => {
     const [state, setState ] = useState({ showCart: '' });
 
     const activatCart = (e:any) => {
@@ -13,6 +14,8 @@ const HeaderApp: React.FC = () => {
     const closeModal = () => {
         setState({ ...state, showCart: '' })
     };
+
+    const items = props.cart.lenght;
     const { showCart } = state;
     return (
         <div className="row">
@@ -79,7 +82,7 @@ const HeaderApp: React.FC = () => {
 
 
                             <div onClick={(e) => activatCart(e)} className="wrap-icon-header flex-w flex-r-m">
-                                <div className="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
+                                <div className="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify={items}>
                                     <i className="zmdi zmdi-shopping-cart"></i>
                                 </div>
                             </div>
@@ -156,4 +159,10 @@ const HeaderApp: React.FC = () => {
 
 };
 
-export default HeaderApp;
+const mapStateToProps = (state:any) => {
+    return {
+        cart: state.cart
+    }
+}
+
+export default connect(mapStateToProps)(HeaderApp);

@@ -180,8 +180,8 @@ const MainCart = (props: any) => {
 const mapStateToProps = (state: any) => {
 
     return {
-        // products: state.product.products,
-        cart: state.cart
+        products: state.product.products,
+        cart: state.cart.cart
     }
 };
 

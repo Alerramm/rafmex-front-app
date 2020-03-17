@@ -7,6 +7,7 @@ import ProductDetailimage03 from '../../assets/img/prod-03.jpg';
 import IconClose from '../../assets/img/icons/icon-close.png';
 import { Button, notification } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
+import { updateCartQuantity, removeFromCart } from '../../redux/actions/cartActions';
 
 const ModalInfo = (props: any) => {
     const { showModal, closeModal, titleCard:title, description, price, id } = props;
@@ -114,13 +115,14 @@ const ModalInfo = (props: any) => {
 const mapStateToProps = (state:any) => {
  
     return {
-        products: state.product,
-        cart: state.cart
+        products: state.product.products,
+        cart: state.cart.cart
     }
 };
  
 const mapDispatchToProps = (dispatch:any) => {
     return {
+        removeFromCart: (productId:number) => dispatch(removeFromCart(productId)),
         addToCart: (item:object) => {
             dispatch(addToCart(item));
         }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {fetchApi} from '../../fetchApi/fetchApi';
 import ModalInfo from './ModalInfo';
-import ImageDemo from '../../assets/img/imagedemo.jpg'
+import ImageDemo from '../../assets/img/imageDemo.jpg';
 import IconHeart1 from '../../assets/img/icons/icon-heart-01.png';
 import IconHeart2 from '../../assets/img/icons/icon-heart-02.png';
 

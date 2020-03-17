@@ -3,11 +3,11 @@ import ItemPic01 from '../../assets/img/novedades/nove1.jpg';
 import { connect } from 'react-redux'
 
 const Cart = (props:any) => {
-    const { showCart, closeModal, cart } = props;
-    console.log('cart--', cart);
+    const { showCart, closeModal, cart, products } = props;
+    console.log('props---', props);
 
     const totalAmount = cart.reduce((i:any,a:any) => {
-        const result = parseFloat(i) + parseFloat(a.price) * a.amount;
+        const result = parseFloat(i.product) + parseFloat(a.product.price) * a.amount;
         return Math.round((result + Number.EPSILON) * 100) / 100
      },0);
 
@@ -28,7 +28,7 @@ const Cart = (props:any) => {
                 <div className="header-cart-content flex-w js-pscroll">
                     <ul className="header-cart-wrapitem w-full">
                         {cart.map((item:any) => {
-                            const { id, title, price, amount } = item;
+                            const { id, title, price, amount } = item.product;
                             return(
                                 <li className="header-cart-item flex-w flex-t m-b-12" key={title}>
                                     <div className="header-cart-item-img">
@@ -78,7 +78,8 @@ const Cart = (props:any) => {
 
 const mapStateToProps = (state:any) => {
     return {
-        cart: state.cart
+        products: state.product.products,
+        cart: state.cart.cart
     }
   }
 

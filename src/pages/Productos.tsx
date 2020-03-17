@@ -49,6 +49,7 @@ const Productos: React.FC = () => {
                 <ProductsBar 
                     allProducts={itemsGeneral}
                     changeLocation={changeLocation}
+                    producto={product}
                 />
             )}
             <div className={`sec-banner bg0 ${isGeneral && 'p-t-80'} p-b-50` }>
