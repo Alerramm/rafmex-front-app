@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ImageB4 from '../assets/img/bg-04.jpg';
 import {fetchApi} from '../fetchApi/fetchApi';
 
-const Contacto: React.FC = () => {
+const Contacto = () => {
 	const [state, setState] = useState({
 		office_phone : '',
 		office_mail : '',

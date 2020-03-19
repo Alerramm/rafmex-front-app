@@ -1,22 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Logo from '../../assets/img/icons/logo.png';
 /* Cart */
 import Cart from '../../../src/pages/Cart/Cart';
 import { connect } from 'react-redux'
 
-const HeaderApp: React.FC = (props:any) => {
-    const [state, setState ] = useState({ showCart: '' });
+const HeaderApp = (props: any) => {
 
-    const activatCart = (e:any) => {
+    const didMountRef = useRef(false);
+    const { cart, changePage, showModalInfo } = props;
+    const [state, setState] = useState({ showCart: '' });
+    const flag = cart.length !== 0;
+
+    useEffect(() => {
+        const handleProps = () => {
+            if (flag) {
+                console.log('update', flag);
+            } else {
+                console.log('noUpdate', flag);
+            }
+        };
+        handleProps();
+        return () => {
+            handleProps();
+        }
+    }, [flag]);
+
+    const activatCart = (e: any) => {
         e.preventDefault();
-        setState({ showCart: 'show-header-cart' });
+        setState({ ...state, showCart: 'show-header-cart' });
     };
     const closeModal = () => {
         setState({ ...state, showCart: '' })
     };
 
-    const items = props.cart.lenght;
+    const changeComponent = (name: string) => {
+        return changePage(name);
+    };
+
+    const gotoCart = () => {
+        setState({ ...state, showCart: '' })
+        return changePage('Carrito');
+    };
+
+    const showModal = (data:any) => {
+        return showModalInfo(data);
+    };
+
+    const items = cart.length;
     const { showCart } = state;
+    const iconNoti = items !== 0 ? 'icon-header-noti' : '';
     return (
         <div className="row">
             <header>
@@ -24,7 +56,7 @@ const HeaderApp: React.FC = (props:any) => {
                     <div className="top-bar">
                         <div className="content-topbar flex-sb-m h-full container">
                             <div className="left-top-bar">
-                                
+
                             </div>
 
                             <div className="right-top-bar flex-w h-full">
@@ -43,7 +75,7 @@ const HeaderApp: React.FC = (props:any) => {
 
                     <div className="wrap-menu-desktop">
                         <nav className="limiter-menu-desktop container">
-                            
+
                             <a href="/index" className="logo">
                                 <img src={Logo} alt="IMG-LOGO" />
                             </a>
@@ -51,38 +83,34 @@ const HeaderApp: React.FC = (props:any) => {
                             <div className="menu-desktop">
                                 <ul className="main-menu">
                                     <li className="active-menu">
-                                         <a href="/index">Inicio</a>
+                                        <button onClick={() => changeComponent("Main")}>Inicio</button>
                                     </li>
 
                                     <li>
-                                        <a href="/nosotros">Nosotros</a>
+                                        <button onClick={() => changeComponent("Nosotros")}>Nosotros</button>
                                     </li>
 
                                     <li>
-                                        <a href="/productos">Productos</a>
+                                        <button onClick={() => changeComponent("Productos")}>Productos</button>
                                     </li>
 
                                     <li>
-                                        <a href="/distribuidores">Distribuidores</a>
+                                        <button onClick={() => changeComponent("Distribuidores")}>Distribuidores</button>
                                     </li>
 
                                     <li>
-                                        <a href="/novedades">Novedades</a>
+                                        <button onClick={() => changeComponent("Novedades")}>Novedades</button>
                                     </li>
 
                                     <li>
-                                        <a href="/contacto">Contacto</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="/comprar">Comprar</a>
+                                        <button onClick={() => changeComponent("Contacto")}>Contacto</button>
                                     </li>
                                 </ul>
-                            </div>	
+                            </div>
 
 
                             <div onClick={(e) => activatCart(e)} className="wrap-icon-header flex-w flex-r-m">
-                                <div className="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify={items}>
+                                <div className={`icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 js-show-cart ${iconNoti}`} data-notify={items}>
                                     <i className="zmdi zmdi-shopping-cart"></i>
                                 </div>
                             </div>
@@ -90,7 +118,7 @@ const HeaderApp: React.FC = (props:any) => {
 
 
                         </nav>
-                    </div>	
+                    </div>
                 </div>
 
                 <div className="wrap-header-mobile">
@@ -127,41 +155,41 @@ const HeaderApp: React.FC = (props:any) => {
                     </ul>
 
                     <ul className="main-menu-m">
-                                    <li>
-                                        <a href="/index">Inicio</a>
-                                    </li>
+                        <li>
+                            <a href="/index">Inicio</a>
+                        </li>
 
-                                    <li>
-                                        <a href="/nosotros">Nosotros</a>
-                                    </li>
+                        <li>
+                            <a href="/nosotros">Nosotros</a>
+                        </li>
 
-                                    <li>
-                                        <a href="/productos">Productos</a>
-                                    </li>
+                        <li>
+                            <a href="/productos">Productos</a>
+                        </li>
 
-                                    <li>
-                                        <a href="/distribuidores">Distribuidores</a>
-                                    </li>
+                        <li>
+                            <a href="/distribuidores">Distribuidores</a>
+                        </li>
 
-                                    <li>
-                                        <a href="/novedades">Novedades</a>
-                                    </li>
+                        <li>
+                            <a href="/novedades">Novedades</a>
+                        </li>
 
-                                    <li>
-                                        <a href="/contacto">Contacto</a>
-                                    </li>
+                        <li>
+                            <a href="/contacto">Contacto</a>
+                        </li>
                     </ul>
                 </div>
-                <Cart showCart={showCart} closeModal={closeModal} />
+                <Cart showModal={showModal} showCart={showCart} closeModal={closeModal} changeComponent={gotoCart}/>
             </header>
         </div>
     );
 
 };
 
-const mapStateToProps = (state:any) => {
+const mapStateToProps = (state: any) => {
     return {
-        cart: state.cart
+        cart: state.cart.cart
     }
 }
 

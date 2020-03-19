@@ -11,7 +11,7 @@ import ImageBanner02 from './../assets/img/banner-02.jpg';
 import ImageBanner03 from './../assets/img/banner-03.jpg';
 {/* <Jumbotron /> */}
 
-const Main: React.FC = () => {
+const Main = () => {
 	const [state, setState] = useState({
 		items: []
 	});

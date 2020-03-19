@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import path from 'path';
+import React, { useEffect, useState, useRef } from 'react';
+import { connect } from 'react-redux'
+import MainCart from './MainCart';
 import Producto from '../pages/Productos/Producto';
 import ProductsBar from './Productos/ProductsBar';
 import {fetchApi} from '../fetchApi/fetchApi';
@@ -14,7 +15,9 @@ import Banner09 from '../assets/img/banner-09.jpg';
 import { Spin } from 'antd';
 const images = [Banner01,Banner02,Banner03,Banner04,Banner05,Banner06,Banner07,Banner09];
 
-const Productos: React.FC = () => {
+const Productos = (props: any) => {
+    const { showModalInfo } = props;
+    const didMountRef = useRef(false);
     const [state, setState] = useState({
         itemsGeneral: [],
         itemProduct: [],
@@ -22,7 +25,17 @@ const Productos: React.FC = () => {
         loading: false,
         product: '',
         url: '',
-	});
+    });
+    
+    useEffect(() => {
+        if (didMountRef.current) {
+            //console.log('actualizacion-----------------', props);
+        } else {
+            //console.log('montaje-----------------', props);
+            didMountRef.current = true;
+        }
+    });
+
 	useEffect(() => {
 		fetchApi('items/products', 'GET')
 			.then(itemsGeneral => {
@@ -57,11 +70,11 @@ const Productos: React.FC = () => {
                 <div className="container">
                     <div className="row">
                         {itemsGeneral.map((item, index) => {
-                            const {title, img_url} = item;
+                            const {title, img_url, img} = item;
                             return( 
                                 <div style={{cursor:'pointer ! important'}} className="col-md-6 col-xl-3 p-b-30 m-lr-auto" key={title}>
                                     <div className="block1 wrap-pic-w">
-                                        <img src={images[index]} alt="IMG-BANNER" />
+                                        <img src={img} alt="IMG-BANNER" />
                                         <div  onClick={() => goProduct(title, img_url)} className="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
                                             <div className="block1-txt-child1 flex-col-l">
                                                 <span className="block1-name ltext-102 trans-04 p-b-8">
@@ -99,6 +112,7 @@ const Productos: React.FC = () => {
                             producto={product}
                             url={url}
                             loader={loader}
+                            showModalInfo={showModalInfo}
                         />
                     </Spin>
                 }
@@ -107,4 +121,13 @@ const Productos: React.FC = () => {
         </div>
     )
 };
-export default Productos;
+
+const mapStateToProps = (state: any) => {
+    return {
+        //products: state.product.products,
+        cart: state.cart.cart,
+        showCart: state.showCart,
+    }
+}
+
+export default connect(mapStateToProps)(Productos);

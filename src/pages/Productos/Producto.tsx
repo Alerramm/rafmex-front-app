@@ -7,7 +7,8 @@ import IconHeart2 from '../../assets/img/icons/icon-heart-02.png';
 
 const Producto = (props:any) => {
     const didMountRef = useRef(false);
-    const { producto, url, loader } = props;
+    const { producto, url, loader, showModalInfo } = props;
+
     const [state, setState] = useState({
         price: 0,
         items: [],
@@ -16,7 +17,15 @@ const Producto = (props:any) => {
         showModal: '',
         titleCard: '', 
         description: '',
+        showModalAny: Object.values(showModalInfo).length !== 0,
+        showModalFromCart: {}
     });
+
+    const showInfoModal = (data:any) => {
+        const { titleCard, description, price, id } = data;
+        setState({ ...state, titleCard, description, showModal: 'show-modal1', price, id });
+    };
+
 	useEffect(() => {
         if (didMountRef.current) {
             fetchApi(`productos${props.url}`, 'GET')
@@ -25,6 +34,10 @@ const Producto = (props:any) => {
                 loader(false);
             });
         } else {
+            const isShowModalFromCart = Object.values(showModalInfo).length !== 0;
+            const { titleCard, description, price, id } = showModalInfo;
+            showInfoModal({ titleCard, description, price, id });
+            setState({ ...state, showModalAny: isShowModalFromCart });
             fetchApi(`productos${url}`, 'GET')
 			.then(response => {
                 setState({ ...state, items: response });
@@ -34,22 +47,21 @@ const Producto = (props:any) => {
         }
     }, [url]);
 
-    const showInfoModal = (titleCard:string, description:string, price: number, id: number) => {
-        setState({ ...state, titleCard, description, showModal: 'show-modal1', price, id });
-    };
-
     const closeModal = () => {
         setState({ ...state, showModal: '' });
     };
 
-    const { items, showModal, titleCard, description, price, id } = state;
+    const { items, showModal, titleCard, description, price, id, showModalFromCart, showModalAny } = state;
+    const show = !!showModal || !showModalAny;
+    console.log('showModalAny========', showModalAny);
+    console.log('showModalInfo=======', showModalInfo);
     return (
         <div className="container">
             <h4 className="mtext-113 cl2 p-b-30">
                 {producto}
             </h4>
             <div className="row isotope-grid">
-                {items.map((item,index) => {
+                {items.map((item,id) => {
                     const { title:titleCard, description, img_url, price } = item;
                     return (
                         <div key={titleCard} className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women" style={{ cursor: 'pointer' }}>
@@ -57,7 +69,7 @@ const Producto = (props:any) => {
                                 <div className="block2-pic hov-img0">
                                     {/* <img src="images/product-01.jpg" alt="IMG-PRODUCT" /> */}
                                     <img src={ImageDemo} alt="IMG-PRODUCT" />
-                                    <div onClick={() => showInfoModal(titleCard, description, price, index)} className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                                    <div onClick={() => showInfoModal({titleCard, description, price, id})} className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
                                         Ver Detalles
                                     </div>
                                 </div>
@@ -83,14 +95,17 @@ const Producto = (props:any) => {
                     )
                 })}
             </div>
-            <ModalInfo
-                id={id}
-                price={price}
-                closeModal={closeModal}
-                showModal={showModal}
-                titleCard={titleCard}
-                description={description}
-            />
+            {show && (
+                <ModalInfo
+                    id={!showModalAny ? id : showModalInfo.id}
+                    price={!showModalAny ? price : showModalInfo.price}
+                    closeModal={!showModalAny ? closeModal : showModalInfo.closeModal}
+                    showModal={showModal}
+                    titleCard={!showModalAny ? titleCard : showModalInfo.titleCard}
+                    description={!showModalAny ? description : showModalInfo.description}
+                    yes={Object.values(showModalInfo).length !== 0}
+                />
+            )}
         </div>
     )
 }

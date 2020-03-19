@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
 import { IonApp } from '@ionic/react';
+import { connect } from 'react-redux'
+import { addToCart, updateCartQuantity, removeFromCart } from './redux/actions/cartActions';
 
 /* Custom Project */
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -40,18 +42,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Main from './pages/Main';
+import Selector from './pages/Selector';
 
-//import Inicio from './pages/Inicio';
+import Main from './pages/Main';
 import Nosotros from './pages/Nosotros';
 import Productos from './pages/Productos';
 import Distribuidores from './pages/Distribuidores';
 import Novedades from './pages/Novedades';
 import Contacto from './pages/Contacto';
 import MainCart from './pages/MainCart';
-
-/* Import Productos */
-
 
 /* Import Local Styles */
 import './assets/rafmexassets/App.css';
@@ -68,63 +67,64 @@ import 'antd/dist/antd.css';
 require('dotenv').config()
 
 class App extends React.Component {
+  state = {
+    componentTitle: 'Productos',
+    showModalInfo: {}
+  };
+  changePage = (component: string) => {
+    this.setState({ componentTitle: component });
+    window.history.pushState("", "", `/${component.toLowerCase()}`);
+  };
+  showModalInfo = (data:any) => {
+    this.setState({ showModalInfo: data });
+  };
   render() {
+    const { componentTitle, showModalInfo } = this.state;
     return (
+      // <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
+      //   <h2 className="ltext-105 cl0 txt-center">
+      //       Nosotros
+      //   </h2>
+      // </section>
       <IonApp style={{ overflowY: 'scroll' }}>
         <Router>
           <Fragment>
             <div style={{ paddingTop: '50px' }}>
-              <HeaderApp />
-                <Switch>
-                  <Route exact path="/index" component={Main} />
-                  <Route exact path="/nosotros" component={Nosotros}>
-                    <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
-                      <h2 className="ltext-105 cl0 txt-center">
-                          Nosotros
-                      </h2>
-                    </section>
-                    <Nosotros />
-                  </ Route>
-                  <Route exact path="/productos" component={Productos}>
-                    <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
-                      <h2 className="ltext-105 cl0 txt-center">
-                          Productos
-                      </h2>
-                    </section>
-                    <Productos />
-                  </ Route>
-                  <Route exact path="/distribuidores" component={Distribuidores}  >
-                    <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
-                      <h2 className="ltext-105 cl0 txt-center">
-                        Distribuidores
-                      </h2>
-                    </section>
-                    <Distribuidores />
-                  </ Route>
-                  <Route exact path="/novedades" component={Novedades}  >
-                    <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
-                      <h2 className="ltext-105 cl0 txt-center">
-                        Novedades
-                      </h2>
-                    </section>
-                    <Novedades />
-                  </ Route>
-                  <Route exact path="/contacto" component={Contacto}  >
-                    <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
-                      <h2 className="ltext-105 cl0 txt-center">
-                        Contacto
-                      </h2>
-                    </section>
-                    <Contacto />
-                  </ Route>
-                  <Route exact path="/miCarrito" component={Contacto}  ><MainCart /></ Route>
-                </Switch>
-                <FooterApp />
-              </div>
+              <HeaderApp changePage={this.changePage} showModalInfo={this.showModalInfo}/>
+                { componentTitle === 'Nosotros' &&        <Nosotros /> ||
+                  componentTitle === 'Contacto' &&        <Contacto /> ||
+                  componentTitle === 'Distribuidores' &&  <Distribuidores /> ||
+                  componentTitle === 'Main' &&            <Main /> ||
+                  componentTitle === 'Novedades' &&       <Novedades /> ||
+                  componentTitle === 'Productos' &&       <Productos showModalInfo={showModalInfo}/> ||
+                  componentTitle === 'Carrito' &&         <MainCart />
+                }
+              <FooterApp />
+            </div>
           </Fragment>
         </Router>
       </IonApp>
     )
   }
 };
-export default App;
+
+const mapStateToProps = (state: any) => {
+
+  return {
+    //products: state.product.products,
+    cart: state.cart.cart
+  }
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    addToCart: (item: object) => {
+      dispatch(addToCart(item));
+    },
+    updateCartQuantity: (productId: any, quantity: any) => dispatch(updateCartQuantity(productId, quantity)),
+    removeFromCart: (productId: number) => dispatch(removeFromCart(productId))
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

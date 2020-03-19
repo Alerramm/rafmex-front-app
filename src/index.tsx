@@ -1,11 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import cartReducer from './redux/reducers/cartReducer';
-import { createStore } from 'redux';
+import reducer from './redux/reducers/cartReducer';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import rootReducer from '../src/redux/reducers/rootReducer';
+import configureStore from './redux/store';
 
-const store = createStore(rootReducer);
+const store = configureStore();
+
+// const store = createStore(
+//     rootReducer,
+//     applyMiddleware(thunk)
+//   );
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));

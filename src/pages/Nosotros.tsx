@@ -3,7 +3,7 @@ import {fetchApi} from '../fetchApi/fetchApi';
 import About01 from '../assets/img/about-01.jpg';
 import About02 from '../assets/img/about-02.jpg';
 
-const Nosotros: React.FC = (props: any) => {
+const Nosotros = (props: any) => {
 	const [state, setState] = useState({
 		info: []
 	});
@@ -15,7 +15,7 @@ const Nosotros: React.FC = (props: any) => {
 		},[]);
 		
 	const { info } = state;
-	console.log(info[0]['value'])
+
     return(
         <section className="bg0 p-t-75 p-b-120">
 		<div className="container">

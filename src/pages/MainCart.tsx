@@ -5,13 +5,13 @@ import { DeleteFilled } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 
 const MainCart = (props: any) => {
-    const didMountRef = useRef(false)
+    const didMountRef = useRef(false);
     const { cart } = props;
     const [count, setCount] = useState(0);
 
     useEffect(() => {
         if (didMountRef.current) {
-          console.log('-----------------', cart);
+            console.log('actualizacion-----------------', props);
         } else {
             console.log('montaje-----------------', props);
             didMountRef.current = true;
@@ -28,44 +28,38 @@ const MainCart = (props: any) => {
                 <form className="bg0 p-t-75 p-b-85">
                     <div className="container">
                         <div className="row">
-                            <div className="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+                            <div className="col-lg-10 m-lr-auto m-b-50">
                                 <div className="m-l-25 m-r--38 m-lr-0-xl">
                                     <div className="wrap-table-shopping-cart">
                                         <table className="table-shopping-cart">
                                             <tr className="table_head">
-                                                <th className="column-1">ID</th>
-                                                <th className="column-2">Producto</th>
-                                                <th className="column-3">Descripción</th>
-                                                <th className="column-4 rmx-center" colSpan={2}>Cantidad</th>
-                                                <th className="column-4">Precio</th>
-                                                <th className="column-5">Total</th>
+                                                <th className="column-1 rmx-center">Producto</th>
+                                                <th className="column-1 rmx-center">Cantidad</th>
+                                                <th className="column-1 rmx-center">Precio</th>
+                                                <th className="column-1 rmx-center">Total</th>
+                                                <th className="column-1 rmx-center">Borrar</th>
                                             </tr>
                                             {cart.map((item: any) => {
-                                                const { id, title, description, amount, price } = item;
+                                                const { id, title, description, amount, price } = item.product;
                                                 const totalXitems = parseFloat(price) * amount;
                                                 const totalCant = Math.round((totalXitems + Number.EPSILON) * 100) / 100;
                                                 return (
                                                     <tr className="table_row">
-                                                        <td className="column-1">{id}</td>
-                                                        <td className="column-2">{title}</td>
-                                                        <td className="column-2">{description}</td>
-                                                        <td className="column-3 rmx-center">{amount}</td>
-                                                        <td className="column-4">
+                                                        <td className="column-1 rmx-center">{title}</td>
+                                                        <td className="column-1 rmx-center">
                                                             <div className="wrap-num-product flex-w m-l-auto m-r-0">
                                                                 <div onClick={() => setCount(prevCount => prevCount - 1)} className="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
                                                                     <i className="fs-16 zmdi zmdi-minus"></i>
                                                                 </div>
-
-                                                                <input className="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value={count} />
-
+                                                                <input className="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value={amount} />
                                                                 <div onClick={() => setCount(prevCount => prevCount + 1)} className="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                                                     <i className="fs-16 zmdi zmdi-plus"></i>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td className="column-5">{price}</td>
-                                                        <td className="column-5">{`$ ${totalCant}`}</td>
-                                                        <td className="column-5">
+                                                        <td className="column-1 rmx-center">{price}</td>
+                                                        <td className="column-1 rmx-center">{`$ ${totalCant}`}</td>
+                                                        <td className="column-1 rmx-center">
                                                             <div className="rmx-cursor-hand" onClick={() => handleRemove(id)}>
                                                                 <Tooltip placement="top" title="Quitar del carrito">
                                                                     <DeleteFilled style={{ color: '#d20202', fontSize: 'xx-large' }} />
@@ -80,7 +74,7 @@ const MainCart = (props: any) => {
                                 </div>
                             </div>
 
-                            <div className="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+                            {/* <div className="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                                 <div className="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
                                     <h4 className="mtext-109 cl2 p-b-30">
                                         Cart Totals
@@ -162,7 +156,7 @@ const MainCart = (props: any) => {
                                         Proceed to Checkout
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </form>
@@ -180,7 +174,7 @@ const MainCart = (props: any) => {
 const mapStateToProps = (state: any) => {
 
     return {
-        products: state.product.products,
+        //products: state.product.products,
         cart: state.cart.cart
     }
 };

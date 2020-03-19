@@ -37,7 +37,7 @@ import DIS32 from '../assets/img/distribuidores/dis_32.jpg';
 
 const states = ['Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas','Chihuahua','Coahuila','Colima','Ciudad de México','Durango','Estado de México','Guanajuato','Guerrero','Hidalgo','Jalisco','Michoacán','Morelos','Nayarit','Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosi','Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas'];
 
-const Distribuidores: React.FC = () => {
+const Distribuidores = () => {
     useEffect(() =>{
         const ps = new PerfectScrollbar('.slick4', {
             wheelSpeed: 2,

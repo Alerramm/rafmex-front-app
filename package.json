@@ -48,6 +48,8 @@
     "react-slick": "^0.25.2",
     "react-switch": "^5.0.1",
     "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "select2": "^4.0.13",
     "slick-carousel": "^1.8.1",

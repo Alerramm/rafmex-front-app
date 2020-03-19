@@ -3,7 +3,7 @@ import {fetchApi} from '../fetchApi/fetchApi';
 import Img1 from '../assets/img/banner_nov_01.jpg';
 import Img2 from '../assets/img/banner_nov_02.jpg';
 
-const Novedades: React.FC = () => {
+const Novedades = () => {
     const [state, setState] = useState({
 		items: []
 	});
