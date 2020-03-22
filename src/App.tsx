@@ -81,16 +81,16 @@ class App extends React.Component {
   render() {
     const { componentTitle, showModalInfo } = this.state;
     return (
-      // <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
-      //   <h2 className="ltext-105 cl0 txt-center">
-      //       Nosotros
-      //   </h2>
-      // </section>
       <IonApp style={{ overflowY: 'scroll' }}>
         <Router>
           <Fragment>
             <div style={{ paddingTop: '50px' }}>
               <HeaderApp changePage={this.changePage} showModalInfo={this.showModalInfo}/>
+                <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundImage: `url(${Bg01})` }}>
+                  <h2 className="ltext-105 cl0 txt-center">
+                      {componentTitle}
+                  </h2>
+                </section>
                 { componentTitle === 'Nosotros' &&        <Nosotros /> ||
                   componentTitle === 'Contacto' &&        <Contacto /> ||
                   componentTitle === 'Distribuidores' &&  <Distribuidores /> ||

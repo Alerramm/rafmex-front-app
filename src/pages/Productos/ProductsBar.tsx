@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const ProductsBar = (props:any) => {
     const { allProducts, changeLocation, producto } = props;
     return(
-        <div className="bg0 m-t-23">
+        <div className="bg0 m-t-23" style={{ marginTop: '100px' }}>
             <div className="container">
                 <div className="row">
                     <div className="flex-w flex-sb-m p-b-52">
