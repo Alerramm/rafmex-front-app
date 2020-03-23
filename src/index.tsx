@@ -5,7 +5,7 @@ import reducer from './redux/reducers/cartReducer';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import rootReducer from '../src/redux/reducers/rootReducer';
+import rootReducer from './redux/reducers';
 import configureStore from './redux/store';
 
 const store = configureStore();

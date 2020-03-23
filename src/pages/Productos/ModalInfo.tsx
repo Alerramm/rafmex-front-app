@@ -14,19 +14,20 @@ const ModalInfo = (props: any) => {
     const { showModal, closeModal, titleCard: title, description, price, id, yes } = props;
     const [count, setCount] = useState(1);
 
-    useEffect(
-        () => {
-            val.current = props;
-            console.log('uno===', props);
-        },
-        [props]
-    );
+    useEffect(() => {
+        val.current = props;
+    },[props]);
+
     useEffect(() => {
         return () => {
-            console.log('dos===', props);
             setCount(1);
         };
     }, []);
+
+    const destroyModal = () => {
+        setCount(1);
+        return closeModal();
+    };
 
     const addToCart = (item: object) => {
         props.addToCart(item);
@@ -53,7 +54,7 @@ const ModalInfo = (props: any) => {
 
             <div className="container">
                 <div className="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
-                    <button onClick={closeModal} className="how-pos3 hov3 trans-04 js-hide-modal1">
+                    <button onClick={() => destroyModal()} className="how-pos3 hov3 trans-04 js-hide-modal1">
                         <img src={IconClose} alt="CLOSE" />
                     </button>
 

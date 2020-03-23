@@ -47,10 +47,6 @@ const Productos = (props: any) => {
     };
     const changeLocation = (product:string, url:string) => {
         setState({ ...state, product, url, loading: true });
-        // fetchApi(`productos${url}`, 'GET')
-		// 	.then(itemProduct => {
-		// 		setState({ ...state, itemProduct });
-        //     });
     };
     const loader = (loading:boolean) => {
         setState({ ...state, loading });

@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux'
-import { addToCart, updateCartQuantity, removeFromCart } from '../redux/actions/cartActions';
+import { addToCart, updateCartQuantity, removeFromCart, modifyCart } from '../redux/actions/cartActions';
 import { DeleteFilled } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 const mercadopago = require('mercadopago');
 
 const MainCart = (props: any) => {
+    console.log('MP-----', mercadopago.global  )
     const didMountRef = useRef(false);
     const { cart } = props;
     const [count, setCount] = useState(0);
@@ -18,12 +19,14 @@ const MainCart = (props: any) => {
     //const tempEachTotals = [];
     useEffect(() => {
         if (didMountRef.current) {
+            const mapped = props.cart.map((i:any) => i.product);
+            handleSetCart(mapped);
         } else {
             const mapped = cart.map((i:any) => i.product);
             handleSetCart(mapped);
             didMountRef.current = true;
         }
-    });
+    },[props]);
     
     const handleRemove = (id: number) => {
         props.removeFromCart(id);
@@ -37,15 +40,40 @@ const MainCart = (props: any) => {
         setState({ ...state, totalPrice, items });
     }
 
-    const quantityModify = (value:string) => {
-        const { items } = state;
+    const quantityModify = (idSelected:number, value:string) => {
+        const { items } = state;       
         const modifier = items.map((item:any,index:any) => {
             return {
                 ...item,
-                amount: item.amount + Number(value)
+                amount: idSelected === item.id ? item.amount + Number(value) : item.amount
             }
         });
+        props.modifyCart(modifier);
         handleSetCart(modifier);
+    };
+
+    const checkPayment = () => {
+        mercadopago.configure({
+            access_token: process.env.REACT_APP_ACCESS_TOKEN
+        });
+        const items = cart
+            .map((i:any) => i.product)
+            .map((i:any) => {
+                return {
+                    title: i.title,
+                    unit_price: i.price,
+                    quantity: i.amount
+                }
+            });
+        const preference = { items };
+        mercadopago.preferences.create(preference)
+        .then((response:any) => {
+        // Este valor reemplazará el string "$$init_point$$" en tu HTML
+        //global.init_point = response.body.init_point;
+        console.log('hola-------', response.body.init_point)
+        }).catch((error:any) => {
+            console.log(error);
+        });
     };
 
     const { totalPrice, items } = state;
@@ -74,11 +102,11 @@ const MainCart = (props: any) => {
                                                         <td className="column-1 rmx-center">{title}</td>
                                                         <td className="column-1 rmx-center">
                                                             <div className="wrap-num-product flex-w m-l-auto m-r-0">
-                                                                <div onClick={() => quantityModify('-1')} className="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                                                <div onClick={() => quantityModify(id, '-1')} className="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
                                                                     <i className="fs-16 zmdi zmdi-minus"></i>
                                                                 </div>
                                                                 <input className="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value={amount} />
-                                                                <div onClick={() => quantityModify('+1')} className="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                                                <div onClick={() => quantityModify(id, '+1')} className="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                                                     <i className="fs-16 zmdi zmdi-plus"></i>
                                                                 </div>
                                                             </div>
@@ -135,7 +163,7 @@ const MainCart = (props: any) => {
                                             </div>
                                         </div>
                                         <div className="col-4 offset-8">
-                                            <button className="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                                            <button onClick={() => checkPayment()} className="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
                                                 Proceder al Pago
                                             </button>
                                             </div>
@@ -169,6 +197,9 @@ const mapDispatchToProps = (dispatch: any) => {
     return {
         addToCart: (item: object) => {
             dispatch(addToCart(item));
+        },
+        modifyCart: (item: object) => {
+            dispatch(modifyCart(item))
         },
         updateCartQuantity: (productId: any, quantity: any) => dispatch(updateCartQuantity(productId, quantity)),
         removeFromCart: (productId: number) => dispatch(removeFromCart(productId))

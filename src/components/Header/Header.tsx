@@ -14,9 +14,9 @@ const HeaderApp = (props: any) => {
     useEffect(() => {
         const handleProps = () => {
             if (flag) {
-                console.log('update', flag);
+                //console.log('update', flag);
             } else {
-                console.log('noUpdate', flag);
+                //console.log('noUpdate', flag);
             }
         };
         handleProps();
@@ -110,7 +110,7 @@ const HeaderApp = (props: any) => {
 
 
                             <div onClick={(e) => activatCart(e)} className="wrap-icon-header flex-w flex-r-m">
-                                <div className={`icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 js-show-cart ${iconNoti}`} data-notify={items}>
+                                <div style={{fontSize: '50px'}} className={`icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 js-show-cart ${iconNoti}`} data-notify={items}>
                                     <i className="zmdi zmdi-shopping-cart"></i>
                                 </div>
                             </div>

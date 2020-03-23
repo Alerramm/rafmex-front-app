@@ -1,4 +1,4 @@
-import { ADD_TO_CART,REMOVE_FROM_CART, UPDATE_CART_QUANTITY, SHOW_CART } from './action-types/cart-actions'
+import { ADD_TO_CART,REMOVE_FROM_CART, UPDATE_CART_QUANTITY, SHOW_CART, MODIFY_CART } from './action-types/cart-actions'
 
 export const addToCart = (product) => {
 
@@ -11,6 +11,14 @@ export const addToCart = (product) => {
     }
 };
  
+export const modifyCart = payload => {
+
+    return {
+        type: MODIFY_CART,
+        payload
+    }
+};
+
 export const getCarrito = (payload) => {
  
     return {
@@ -19,12 +27,12 @@ export const getCarrito = (payload) => {
     }
 };
 
-export const removeFromCart = (productId) => {
+export const removeFromCart = productId => {
  
     return {
         type: REMOVE_FROM_CART,
         payload: {
-            productId: productId
+            productId
         }
     }
 };

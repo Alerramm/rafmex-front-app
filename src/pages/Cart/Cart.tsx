@@ -5,6 +5,7 @@ import { getCarrito } from '../../redux/actions/actionsActions';
 
 const Cart = (props: any) => {
     const { showCart, closeModal, cart, changeComponent, showModal } = props;
+    console.log('props', cart)
 
     // const totalAmount = cart.reduce((i:any,a:any) => {
     //     const result = parseFloat(i.product) + parseFloat(a.product.price) * a.product.amount;
