@@ -12,8 +12,7 @@ export const sdkResponseHandler = (status, response) => {
         card.setAttribute('type', 'hidden');
         card.setAttribute('value', response.id);
         form.appendChild(card);
-        //doSubmit=true;
-        form.submit();
+        return;
     }
 };
 
@@ -31,35 +30,16 @@ export const addEvent = (to, type, fn) => {
     }
 };
 
-// addEvent(document.querySelector('#cardNumber'), 'keyup', guessingPaymentMethod);
-// addEvent(document.querySelector('#cardNumber'), 'change', guessingPaymentMethod);
-
-export const getBin = () => {
-    const cardnumber = document.getElementById("cardNumber");
-    return cardnumber.value.substring(0, 6);
+export const guessingPaymentMethod = bin => {
+    window.Mercadopago.getPaymentMethod({
+        "bin": bin
+    }, setPaymentMethodInfo);
 };
 
-export const guessingPaymentMethod = event => {
-    const bin = getBin();
-
-    if (event.type == "keyup") {
-        if (bin.length >= 6) {
-            window.Mercadopago.getPaymentMethod({
-                "bin": bin
-            }, setPaymentMethodInfo);
-        }
-    } else {
-        setTimeout(function () {
-            if (bin.length >= 6) {
-                window.Mercadopago.getPaymentMethod({
-                    "bin": bin
-                }, setPaymentMethodInfo);
-            }
-        }, 100);
-    }
-};
 export const prueba = form => console.log('form----', form);
+
 export const setPaymentMethodInfo = (status, response) => {
+    console.log('=====--------', response);
     if (status == 200) {
         const paymentMethodElement = document.querySelector('input[name=paymentMethodId]');
 
