@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import { addToCart, updateCartQuantity, removeFromCart, modifyCart } from '../redux/actions/cartActions';
 import { DeleteFilled } from '@ant-design/icons';
 import { Tooltip } from 'antd';
+import Checkout from './Cart/Checkout';
 const mercadopago = require('mercadopago');
 
 const MainCart = (props: any) => {
-    console.log('MP-----', mercadopago.global  )
+  
     const didMountRef = useRef(false);
     const { cart } = props;
     const [count, setCount] = useState(0);
@@ -15,6 +16,7 @@ const MainCart = (props: any) => {
         totalPrice: 0,
         eachTotals: [],
         items: [],
+        checkout: false,
     });
     //const tempEachTotals = [];
     useEffect(() => {
@@ -52,34 +54,16 @@ const MainCart = (props: any) => {
         handleSetCart(modifier);
     };
 
-    const checkPayment = () => {
-        mercadopago.configure({
-            access_token: process.env.REACT_APP_ACCESS_TOKEN
-        });
-        const items = cart
-            .map((i:any) => i.product)
-            .map((i:any) => {
-                return {
-                    title: i.title,
-                    unit_price: i.price,
-                    quantity: i.amount
-                }
-            });
-        const preference = { items };
-        mercadopago.preferences.create(preference)
-        .then((response:any) => {
-        // Este valor reemplazará el string "$$init_point$$" en tu HTML
-        //global.init_point = response.body.init_point;
-        console.log('hola-------', response.body.init_point)
-        }).catch((error:any) => {
-            console.log(error);
-        });
+    const checkPayment = (e:any) => {
+        e.preventDefault();
+        setState({ ...state, checkout: true });
+        //window.Mercadopago.setPublishableKey(process.env.REACT_APP_PUBLIC_KEY);
     };
 
-    const { totalPrice, items } = state;
+    const { totalPrice, items, checkout } = state;
     return (
         <>
-            {cart.length !== 0 && (
+            {cart.length !== 0 && !checkout && (
                 <form className="bg0 p-t-75 p-b-85">
                     <div className="container">
                         <div className="row">
@@ -163,7 +147,7 @@ const MainCart = (props: any) => {
                                             </div>
                                         </div>
                                         <div className="col-4 offset-8">
-                                            <button onClick={() => checkPayment()} className="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                                            <button onClick={(e) => checkPayment(e)} className="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
                                                 Proceder al Pago
                                             </button>
                                             </div>
@@ -174,13 +158,13 @@ const MainCart = (props: any) => {
                         }
                     </div>
                 </form>
-            ) || (
+            ) || (!checkout &&
                     <section className="bg-img1 txt-center p-lr-15 p-tb-92" style={{ backgroundColor: 'white', padding: '300px 0 300px 0' }}>
                         <h2 className="ltext-105 txt-center">
                             Tu carrito de compras esta vacío
                     </h2>
                     </section>
-                )}
+                ) || checkout && <Checkout />}
         </>
     )
 };
