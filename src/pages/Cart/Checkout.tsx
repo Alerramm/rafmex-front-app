@@ -3,8 +3,8 @@ import Card from 'react-credit-cards';
 import {
   mercadoPagoInit,
   addEvent,
+  payment,
   guessingPaymentMethod,
-  setPaymentMethodInfo,
   captureSubmit
 } from './MercadoPago';
 import SupportedCards from './Cards';
@@ -29,6 +29,10 @@ const Checkout = () => {
     focused: '',
     formData: null,
   });
+
+  useEffect(() => {
+    mercadoPagoInit();
+  }, []);
 
   const handleCallback = (a: any, isValid: any) => {
     const { issuer } = a;
@@ -80,8 +84,8 @@ const Checkout = () => {
   };
 
   const handlePayMP = (data: object) => {
-    mercadoPagoInit();
-    captureSubmit(data);
+    const formTotal = document.getElementById('pay');
+    captureSubmit(data, formTotal);
   };
 
   const { name, number, expiry, cvc, focused, issuer, formData } = state;
@@ -137,16 +141,16 @@ const Checkout = () => {
               <li>
                 <input name="name" placeholder="Nombre" className="form-control" type="text" id="cardholderName" data-checkout="cardholderName" required onChange={(e: any) => handleInputChange(e)} onFocus={(e: any) => handleInputFocus(e)} />
               </li>
-              <li>
+              {/* <li>
                 <label>Document type:</label>
                 <select id="docType" data-checkout="docType"></select>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <label>Document number:</label>
                 <input className="form-control" type="text" id="docNumber" data-checkout="docNumber" placeholder="12345678" />
-              </li>
+              </li> */}
               <li>
-                <label>Installments:</label>
+                <label>Elegir Mensualidades:</label>
                 <select id="installments" className="form-control" name="installments"></select>
               </li>
             </ul>
@@ -154,14 +158,14 @@ const Checkout = () => {
             <input type="hidden" name="amount" id="amount" />
             <input type="hidden" name="description" />
             <input type="hidden" name="paymentMethodId" />
-            <input type="submit" value="Pay!" />
+            <input className="flex-c-m stext-101 cl0 size-103 bg1 bor1 p-lr-15 trans-04" type="submit" value="Pay!" />
           </fieldset>
         </form>
-        {formData && (
+        {/*formData && (
           <div className="App-highlight">
             {formatFormData(formData).map((d, i) => <div key={i}>{d}</div>)}
           </div>
-        )}
+        )*/}
         <hr style={{ margin: '30px 0' }} />
         <SupportedCards />
       </div>
