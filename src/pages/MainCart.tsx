@@ -164,7 +164,7 @@ const MainCart = (props: any) => {
                             Tu carrito de compras esta vacío
                     </h2>
                     </section>
-                ) || checkout && <Checkout />}
+                ) || checkout && <Checkout items={items} totalPrice={totalPrice} />}
         </>
     )
 };

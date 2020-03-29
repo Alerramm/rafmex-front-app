@@ -1,17 +1,27 @@
 import messages from './mensajes';
+import swal from 'sweetalert';
+const mercadopago = require('mercadopago');
 
 let getBin = '';
 let getId = '';
 let getIssuer = {};
 
+function wait(ms){
+    var start = new Date().getTime();
+    var end = start;
+    while(end < start + ms) {
+      end = new Date().getTime();
+   }
+ }
+
 export const mercadoPagoInit = () => {
     window.Mercadopago.setPublishableKey(process.env.REACT_APP_PUBLIC_KEY);
 };
 
-export const sdkResponseHandler = (status, response) => {
+function sdkResponseHandler(status, response){
+    let id = '';
     if (status != 200 && status != 201) {
-        alert("verify filled data");
-        return;
+        console.error('verify filled data');
     } else {
         var form = document.querySelector('#pay');
         var card = document.createElement('input');
@@ -19,14 +29,15 @@ export const sdkResponseHandler = (status, response) => {
         card.setAttribute('type', 'hidden');
         card.setAttribute('value', response.id);
         form.appendChild(card);
+        document.getElementById('idToken').value = response.id;
         getId = response.id;
+        console.log('getId------', getId)
     }
+    return id;
 };
 
-export const captureSubmit = (form, formTotal) => {
+export const captureSubmit = (formTotal) => {
     window.Mercadopago.createToken(formTotal, sdkResponseHandler);
-    /* Aqui se hace el pago */
-    payment(getId, getIssuer);
 };
 
 export const addEvent = (to, type, fn) => {
@@ -77,7 +88,7 @@ export const setInstallmentInfo = (status, response) => {
     getIssuer = response[0].issuer;
     const selectorInstallments = document.querySelector("#installments"),
         fragment = document.createDocumentFragment();
-    selectorInstallments.options.length = 0;
+        selectorInstallments.options.length = 0;
 
     if (response.length > 0) {
         var option = new Option("Seleccione una opción...", '-1'),
@@ -93,21 +104,21 @@ export const setInstallmentInfo = (status, response) => {
     }
 };
 
-export const payment = (token, getIssuer) => {
-    const mercadopago = require('mercadopago');
+export const payment = () => {
     mercadopago.configurations.setAccessToken(process.env.REACT_APP_ACCESS_TOKEN);
-    const transaction_amount = document.getElementsByName('amount')[0].value;
+    const transaction_amount_string = document.getElementsByName('amount')[0].value;
     const description = document.getElementsByName('description')[0].value;
     const payment_method_id = document.getElementsByName('paymentMethodId')[0].value;
-    //const token = document.getElementsByName('token')[0].value;
     const email = document.getElementById('email').value;
     const { id: issuer_id } = getIssuer;
 
+    const transaction_amount = Number(transaction_amount_string);
+
     const payment_data = {
-        transaction_amount: 154,
-        token : 'bb8e9890831127521222c680a50659ad',
-        description: 'Durable Iron Keyboard',
-        installments: 3,
+        transaction_amount,
+        token : getId,
+        description,
+        installments: 1,
         payment_method_id,
         issuer_id,
         payer: {
@@ -119,8 +130,7 @@ export const payment = (token, getIssuer) => {
     mercadopago.payment.save(payment_data)
         .then(data => {
             console.log(data);
+            swal("Genial", "El pago se acreditó", "success");
             //res.send(data);
-        }).catch(error => {
-            console.log(error);
-        });
+        })
 };
